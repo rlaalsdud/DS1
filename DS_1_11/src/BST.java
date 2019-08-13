@@ -1,4 +1,6 @@
 
+import java.util.Stack;
+
 public class BST {
 	private Comparable key;
 	private BST left, right;
@@ -87,43 +89,58 @@ public class BST {
 		}
 
 	}
-	public boolean iter_insert(int key) {
-		BST cNode = this;
-		if(this.key == null) {
-			this.key = new Node(key);
-			size++;
-			return true;
-		}
-		else {
-			while(cNode != null) {
-				if(this.key.compareTo(key) == 1) {
-					if(cNode.left != null) {
-						cNode = cNode.left;
+		public boolean iter_insert(int key) {	
+			Stack<Object> stack = new Stack<Object>();
+			BST cNode = (BST)this;
+			if(cNode.key == null) {
+				this.key = new Node(key);
+				size++;
+				return true;
+			}
+			else {
+
+				BST Size = null;
+
+				while(cNode.key.compareTo(key) != 0) {
+					stack.push(cNode);
+
+					if(cNode.key.compareTo(key) == -1) {
+						if(cNode.right != null) {
+							cNode = cNode.right;
+						}
+						else {
+							BST a = new BST(key);
+							cNode.right = a;
+
+							while(!stack.empty()) {
+								Size = (BST)stack.pop();
+								Size.size++;
+							}
+							return true;
+						}
 					}
-					else {
-						cNode.left = new BST(key);
-						size++;
-						break;
-					}
-				}
-				else if(this.key.compareTo(key) == -1) {
-					if(cNode.right != null) {
-						cNode = cNode.right;
-					}
-					else {
-						cNode.right = new BST(key);
-						size++;
-						break;
+					else if(cNode.key.compareTo(key) == 1) {
+						if(cNode.left != null) {
+							cNode = cNode.left;
+						}
+						else {
+							BST b = new BST(key); 
+							cNode.left = b;
+
+							while(!stack.empty()) {
+								Size = (BST)stack.pop();
+								Size.size++;
+							}
+							return true;
+						}
 					}
 
 				}
-				else {
-					return false;
-				}
-			} 
+
+
+				return false;
+			}
 		}
-		return true;
-	}
 	public void inorder() {
 		Node p = (Node) this.key;
 		if (this.key != null) {
